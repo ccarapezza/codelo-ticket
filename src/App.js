@@ -79,13 +79,7 @@ export default function App() {
            </List>
         </Box>
       </Drawer>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/create-ticket" element={<CreateTicket />} />
-        <Route path="/ticket-list" element={<TicketList />} />
-        <Route path="/break-ticket" element={<BreakTicket />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
+      <Routes/>
     </Container>
   );
 }
