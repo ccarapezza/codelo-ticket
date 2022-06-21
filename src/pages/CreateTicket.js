@@ -23,6 +23,11 @@ export default function CreateTicket() {
                 label="DNI"
                 type="number"
             />
+            <TextField
+                id="input-email"
+                label="Email"
+                type="email"
+            />
             <ToggleButtonGroup
               color="primary"
               value={tipoParticipante}

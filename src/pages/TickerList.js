@@ -10,10 +10,10 @@ export default function TicketList() {
   }
 
   const rows = [
-    createData('Jorge','Juarez', 23737737, true, true, "", true),
-    createData('Roberto','Perez', 34081431, false, true, "", false),
-    createData('Irma','Rodriguez', 34081431, true, false, "Falta muestra", false),
-    createData('Marta','Hidalgo', 34081431, true, true, "", false),
+    createData('Jorge','Juarez', 23737737, 'aasf@sfdsc.com', true, true, "", true),
+    createData('Roberto','Perez', 34081431, 'aasf@sfdsc.com', false, true, "", false),
+    createData('Irma','Rodriguez', 34081431, 'aasf@sfdsc.com', true, false, "Falta muestra", false),
+    createData('Marta','Hidalgo', 34081431, 'aasf@sfdsc.com', true, true, "", false),
   ];
   
   return (
@@ -28,6 +28,7 @@ export default function TicketList() {
                   <TableCell sx={{fontWeight: "bold"}}>Nombre</TableCell>
                   <TableCell sx={{fontWeight: "bold"}}>Apellido</TableCell>
                   <TableCell sx={{fontWeight: "bold"}}>DNI</TableCell>
+                  <TableCell sx={{fontWeight: "bold"}}>Email</TableCell>
                   <TableCell sx={{fontWeight: "bold"}}>Tipo</TableCell>
                   <TableCell sx={{fontWeight: "bold"}}>Pago</TableCell>
                   <TableCell sx={{fontWeight: "bold"}}>Observaciones</TableCell>
@@ -43,6 +44,7 @@ export default function TicketList() {
                     <TableCell>{row.nombre}</TableCell>
                     <TableCell>{row.apellido}</TableCell>
                     <TableCell>{row.dni}</TableCell>
+                    <TableCell>{row.email}</TableCell>
                     <TableCell>{row.isParticipante?<Chip color="info" label="PARTICIPANTE" />:<Chip color="secondary" label="INVITADO" />}</TableCell>
                     <TableCell>{row.isPago?<Chip color="success" label="PAGO" />:<Chip color="error" label="NO PAGO" />}</TableCell>
                     <TableCell>{row.observaciones}</TableCell>

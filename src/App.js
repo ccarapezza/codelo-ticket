@@ -3,13 +3,9 @@ import { faHome, faList, faPlus, faTicket } from "@fortawesome/free-solid-svg-ic
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MenuIcon from "@mui/icons-material/Menu";
 import { AppBar, Box, Container, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./App.css";
-import BreakTicket from "./pages/BreakTicket";
-import CreateTicket from "./pages/CreateTicket";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import TicketList from "./pages/TickerList";
+import RoutesSection from './RoutesSection';
 
 export default function App() {
   let navigate = useNavigate();
@@ -79,7 +75,7 @@ export default function App() {
            </List>
         </Box>
       </Drawer>
-      <Routes/>
+      <RoutesSection/>
     </Container>
   );
 }
