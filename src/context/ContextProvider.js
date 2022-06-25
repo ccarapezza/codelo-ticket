@@ -1,11 +1,12 @@
 import { Alert, Snackbar } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router-dom";
 import Context from "./Context";
 
 function ContextProvider({ children }) {
-  let history = useHistory();
+  let navigate = useNavigate();
+
   const [isLogged, setIsLogged] = useState(false);
   const [userData, setUserDataState] = useState(JSON.parse(localStorage.getItem('userdata')?localStorage.getItem('userdata'):null));
   
@@ -44,7 +45,7 @@ function ContextProvider({ children }) {
       if(response.status === 200){
         setUserData(response.data);
         showMessage("Sesión iniciada, Bienvenido!", "success");
-        history.push("/");
+        navigate("/");
       }else{
         showMessage("Usuario y/o contraseña incorrectos.", "error");
         console.error(response);  
@@ -60,7 +61,7 @@ function ContextProvider({ children }) {
     localStorage.clear();
     setUserData(null);
     showMessage("Sesión cerrada.", "success");
-    history.push("/");
+    navigate("/");
   }
 
   useEffect(() => {
