@@ -68,7 +68,6 @@ function ContextProvider({ children }) {
     if(userData?.accessToken){
       setIsLogged(true);
       //Set id token
-      axios.defaults.headers.common["x-access-hash"] = null;
       axios.defaults.headers.common["x-access-token"] = userData?.accessToken;
     }else{
       setIsLogged(false);
