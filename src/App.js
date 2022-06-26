@@ -126,11 +126,9 @@ export default function App() {
                         <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={(e) => { setMenuOpen(true); }}>
                           <MenuIcon />
                         </IconButton>
-                        <Box sx={{display:"flex", alignItems: "center"}}>
-                          <small style={{textTransform:"uppercase", margin: 5}}>{theme.palette.mode} Mode</small>{theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
-                          <IconButton edge="end" color="inherit" sx={{ ml: 1 }} onClick={colorMode.toggleColorMode}>
-                          </IconButton>
-                        </Box>
+                        <IconButton edge="end" color="inherit" sx={{ ml: 1 }} onClick={colorMode.toggleColorMode}>
+                          {theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
+                        </IconButton>
                       </Toolbar>
                     </AppBar>
                     <Menu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />

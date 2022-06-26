@@ -4,7 +4,7 @@ import { ContentCut, Login, Logout } from '@mui/icons-material';
 import { BottomNavigation, BottomNavigationAction, Box, Button, Paper, Stack } from '@mui/material';
 import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
-import codeloTicketLogo from '../assets/codelo-ticket-logo.jpg';
+import codeloTicketLogo from '../assets/codelo-ticket-logo.png';
 import Context from '../context/Context';
 
 export default function Home() {
