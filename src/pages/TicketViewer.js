@@ -41,6 +41,7 @@ export default function TicketViewer() {
                 setLoading(false);
             })
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hash]);
 
     return (loading?
@@ -52,11 +53,11 @@ export default function TicketViewer() {
                     <p>{ticketData?.nombre+" "+ticketData?.apellido}</p><p>E-TICKET #{ticketData?.id}</p>
                 </div>
                 {ticketData?.qrHash&&
-                    <img src={ticketData?.qrHash} style={{margin: "0 auto"}}/>
+                    <img alt={ticketData?.qrHash} src={ticketData?.qrHash} style={{margin: "0 auto"}}/>
                 }
             </div>
             <div style={{border: "1px solid black", width: "fit-content", margin: "0 auto", display: "table"}}>
-                <img width='200' src={logoCopa} style={{display: "table-cell"}}/>
+                <img alt="logo-copa" width='200' src={logoCopa} style={{display: "table-cell"}}/>
                 <ul style={{listStyleType: "none", display: "table-cell", verticalAlign: "middle", padding: "15px"}}>
                     <li><b>Fecha:</b> Domingo 17 de Julio</li>
                     <li><b>Hora:</b> 12:00 hrs.</li>

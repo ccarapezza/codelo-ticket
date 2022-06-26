@@ -43,7 +43,7 @@ export default function BreakTicket() {
         if(hashTicket){
             setLoading(true)
             axios.post("/api/ticket/verify",{
-              hash: hashTicket
+                hash: hashTicket
             }).then(function (response) {
                 if(response.status === 200){
                     context.showMessage("Ticket verificado correctamente!", "success");
@@ -63,6 +63,7 @@ export default function BreakTicket() {
                 setLoading(false);
             })
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hashTicket])
 
     const confirmarCorteTicket = () => {
@@ -154,12 +155,13 @@ export default function BreakTicket() {
                                         </IconButton>
                                     } />
                                 <CardContent>
-                                     
+                                     {/*
                                         <div>
                                             <input type="text" value={hashTicket} onChange={(e)=>{setHashTicket(e.target.value)}} />
                                         </div>
                                         <div>QR RESULT:{hashTicket}</div>
                                         <div>{JSON.stringify(error)}</div>
+                                    */}
                                     
                                     <QrReader
                                         facingMode={camera}

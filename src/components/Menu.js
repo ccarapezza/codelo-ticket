@@ -88,7 +88,7 @@ export default function Menu(props) {
                                         <FontAwesomeIcon icon={faChartPie} transform="shrink-6 left-2" />
                                     </span>
                                 </ListItemIcon>
-                                <ListItemText primary={"Control Tickets"} />
+                                <ListItemText primary={"Control"} />
                             </ListItem>
 
                             <ListItem button key={"close-session"} onClick={(e) => context.logout()}>

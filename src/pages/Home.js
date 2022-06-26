@@ -1,7 +1,7 @@
 import { faTicket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ContentCut, Login } from '@mui/icons-material';
-import { BottomNavigation, BottomNavigationAction, Box, Button, Paper, Stack, Typography } from '@mui/material';
+import { ContentCut, Login, Logout } from '@mui/icons-material';
+import { BottomNavigation, BottomNavigationAction, Box, Button, Paper, Stack } from '@mui/material';
 import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import codeloTicketLogo from '../assets/codelo-ticket-logo.jpg';
@@ -20,8 +20,7 @@ export default function Home() {
         <Button variant="contained" endIcon={<Login/>} onClick={()=>navigate("/login")} sx={{width: "fit-content", alignSelf: "center"}} size="small">Ingresar</Button>
         :
         <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center", p: 2, flexDirection: "column", textAlign: "center" }}>
-          <Typography variant='h4'>Bienvenido <i>{context.userData?.username}</i></Typography>
-          <Button variant="contained" onClick={()=>context.logout()} sx={{width: "fit-content", alignSelf: "center"}} size="small">Cerrar sesión</Button>
+          <Button variant="contained" onClick={()=>context.logout()} sx={{width: "fit-content", alignSelf: "center"}} size="small" startIcon={<Logout/>}>Cerrar sesión</Button>
         </Box>
       }
     </Stack>

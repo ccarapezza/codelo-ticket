@@ -1,12 +1,12 @@
 import React, { useContext, useState } from 'react'
-import { ContentCut, DeleteForeverOutlined, DoorBackOutlined, Edit, FilterAlt, MonetizationOn, MoreVert, QrCode, Search } from '@mui/icons-material';
+import { ArrowDownward, ArrowUpward, ContentCut, DeleteForeverOutlined, DoorBackOutlined, Edit, FilterAlt, MonetizationOn, MoreVert, QrCode, Search } from '@mui/icons-material';
 import { Box, Card, CardContent, CardHeader, Chip, Collapse, FormControl, IconButton, InputAdornment, InputLabel, List, ListItem, ListItemAvatar, ListItemIcon, ListItemSecondaryAction, ListItemText, Menu, MenuItem, OutlinedInput, Paper, Select, Stack, Switch, Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Typography } from '@mui/material'
 import { Container } from '@mui/system'
 import axios from 'axios';
 import Loading from "../components/Loading";
 import { useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCannabis, faJoint, faList, faTable, faTicket, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCannabis, faJoint, faList, faStoreAlt, faTable, faTicket, faUser } from '@fortawesome/free-solid-svg-icons';
 import { EnhancedTableHead } from '../components/EnhanceTable/EnhancedTableHead';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import Context from '../context/Context';
@@ -110,10 +110,17 @@ export default function TicketList() {
       sortable: true,
     },
     {
-      id: 'nombreCompleto',
+      id: 'nombre',
       numeric: false,
       disablePadding: false,
-      label: 'Nombre y Apellido',
+      label: 'Nombre',
+      sortable: true,
+    },
+    {
+      id: 'apellido',
+      numeric: false,
+      disablePadding: false,
+      label: 'Apellido',
       sortable: true,
     },
     {
@@ -184,6 +191,26 @@ export default function TicketList() {
     })
     .then(function () {
       setLoading(false);
+    })
+  };
+
+  const confirmarDeleteTicket = () => {
+    axios.delete("/api/ticket/delete",{
+      data:{
+        id: selectedTicket?.id
+      }
+    }).then(function (response) {     
+      if(response.status === 200){
+        context.showMessage("Se ha confirmado la eliminación del Ticket.", "success");
+        listAllTickets();
+      }else{
+        context.showMessage("No se ha confirmado la eliminación del Ticket. Contacte con el administrador.", "error");
+        console.error(response);  
+      }
+    })
+    .catch(function (error) {
+      context.showMessage("No se ha confirmado la eliminación del Ticket. Contacte con el administrador.", "error");
+      console.error(error);
     })
   };
 
@@ -270,11 +297,12 @@ export default function TicketList() {
     }
   }, [filter, filterTipo, filterPago, filterIngreso, ticketList])
 
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(false);
   const open = Boolean(anchorEl);
 
   const [confirmCutTicketOpen, setConfirmCutTicketOpen] = useState(null);
   const [confirmPagoTicketOpen, setConfirmPagoTicketOpen] = useState(null);
+  const [confirmDeleteTicketOpen, setConfirmDeleteTicketOpen] = useState(null);
 
   const [selectedTicket, setSelectedTicket] = useState(null);
   const handleClickAnchor = (event, selectedRow) => {
@@ -338,7 +366,7 @@ export default function TicketList() {
                   labelId="filter-tipo-label"
                   id="filter-tipo"
                   value={filterTipo}
-                  label="Age"
+                  label="Tipo"
                   onChange={(e)=>{setFilterTipo(e.target.value)}}
                 >
                   <MenuItem value={""}>Todos</MenuItem>
@@ -353,7 +381,7 @@ export default function TicketList() {
                   labelId="filter-pago-label"
                   id="filter-pago"
                   value={filterPago}
-                  label="Age"
+                  label="Pago"
                   onChange={(e)=>{setFilterPago(e.target.value)}}
                 >
                   <MenuItem value={""}>Todos</MenuItem>
@@ -368,7 +396,7 @@ export default function TicketList() {
                   labelId="filter-ingresado-label"
                   id="filter-ingresado"
                   value={filterIngreso}
-                  label="Age"
+                  label="Ingresó"
                   onChange={(e)=>{setFilterIngreso(e.target.value)}}
                 >
                   <MenuItem value={""}>Todos</MenuItem>
@@ -376,6 +404,35 @@ export default function TicketList() {
                   <MenuItem value={"false"}>No Ingresó</MenuItem>
                 </Select>
               </FormControl>
+              <Box sx={{display: "flex", flexDirection: "row"}}>
+                <FormControl fullWidth size="small" sx={{mt:1}}>
+                  <InputLabel id="filter-sort-label">Ordenar</InputLabel>
+                  <Select
+                    labelId="filter-sort-label"
+                    id="filter-sort"
+                    value={orderBy}
+                    label="Ordenar"
+                    onChange={(e)=>{setOrderBy(e.target.value)}}
+                  >
+                    <MenuItem value={""}>-</MenuItem>
+                    <MenuItem value={"id"}>Id</MenuItem>
+                    <MenuItem value={"nombre"}>Nombre</MenuItem>
+                    <MenuItem value={"apellido"}>Apellido</MenuItem>
+                    <MenuItem value={"dni"}>Dni</MenuItem>
+                    <MenuItem value={"tipo"}>Tipo</MenuItem>
+                    <MenuItem value={"pago"}>Pago</MenuItem>
+                    <MenuItem value={"ingresado"}>Ingresado</MenuItem>
+                    <MenuItem value={"observaciones"}>Observaciones</MenuItem>
+                  </Select>
+                </FormControl>
+                <IconButton edge="end" onClick={()=>{setOrder(order==="asc"?"desc":"asc")}} sx={{mx: 1}}>
+                  {order==="asc"?
+                    <><ArrowUpward/>{/*ICON*/}</>
+                  :
+                    <><ArrowDownward/>{/*ICON*/}</>
+                  }
+                </IconButton>
+              </Box>
               <hr/>
             </Collapse>
             
@@ -399,7 +456,7 @@ export default function TicketList() {
                 <MenuItem onClick={()=>{handleClose(); navigate("/ticket-viewer/"+selectedTicket?.hash);}}><ListItemIcon><QrCode/></ListItemIcon>Ver QR</MenuItem>
               }
               <MenuItem onClick={()=>{handleClose(); navigate("/edit-ticket/"+selectedTicket?.id);}}><ListItemIcon><Edit/></ListItemIcon>Editar</MenuItem>
-              <MenuItem onClick={handleClose}><ListItemIcon><DeleteForeverOutlined/></ListItemIcon>Eliminar</MenuItem>
+              <MenuItem color="error" onClick={()=>{handleClose(); setConfirmDeleteTicketOpen(true);}}><ListItemIcon><DeleteForeverOutlined/></ListItemIcon>Eliminar</MenuItem>
             </Menu>
 
             <ConfirmDialog open={confirmCutTicketOpen}
@@ -416,23 +473,38 @@ export default function TicketList() {
               confirmButtonLabel="Confirmar"
               cancelButtonLabel="Cancel" />
 
+            <ConfirmDialog open={confirmDeleteTicketOpen}
+              setOpen={setConfirmDeleteTicketOpen}
+              actionConfirm={confirmarDeleteTicket}
+              message={"Se procederá a eliminar el Ticket N° "+selectedTicket?.id+"."}
+              confirmButtonLabel="Confirmar"
+              cancelButtonLabel="Cancel" />
+
               {listMode?
-                <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+                <List sx={{ width: '100%' }}>
                   {finalTicketList.slice().sort(getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => {
                       return (
                         <ListItem key={"item-participante-"+row.id} sx={{pl: 0}}>
                           <ListItemAvatar sx={{display:"flex", flexDirection: "column", justifyItems: "center", pr:1}}>
-                            {row.tipo==="PARTICIPANTE"?
+                            {row.tipo==="PARTICIPANTE"&&
                               <span className="fa-layers fa-fw fa-3x" title="Participante">
                                 <FontAwesomeIcon style={{color: "#0288d1"}} icon={faUser} transform="shrink-4 left-2"/>
                                 <FontAwesomeIcon icon={faCannabis} transform="shrink-8 down-4 right-4"/>
                               </span>
-                              :
+                            }
+                            {row.tipo==="INVITADO"&&
                               <span className="fa-layers fa-fw fa-3x" title="Invitado">
                                 <FontAwesomeIcon style={{color: "#ff5722"}} icon={faUser} transform="shrink-4 left-2"/>
                                 <FontAwesomeIcon icon={faJoint} transform="shrink-10 down-2 right-4"/>
+                              </span>
+                            }
+                            {row.tipo==="SPONSOR"&&
+                              <span className="fa-layers fa-fw fa-3x" title="Sponsor">
+                                <FontAwesomeIcon style={{color: "#11ac39"}} icon={faUser} transform="shrink-4 left-2"/>
+                                <FontAwesomeIcon icon={faCannabis} transform="shrink-10 up-1 right-4"/>
+                                <FontAwesomeIcon icon={faStoreAlt} transform="shrink-10 down-5 right-4"/>
                               </span>
                             }
                             <Box sx={{textAlign:"center"}}><FontAwesomeIcon icon={faTicket} transform="shrink-2 down-1"/><small> #{row.id}</small></Box>
@@ -502,11 +574,12 @@ export default function TicketList() {
                                 selected={isItemSelected}
                               >
                                 <TableCell>{row.id}</TableCell>
-                                <TableCell>{row.nombre} {row.apellido}</TableCell>
+                                <TableCell>{row.nombre}</TableCell>
+                                <TableCell>{row.apellido}</TableCell>
                                 <TableCell>{row.dni}</TableCell>
                                 <TableCell>{row.email}</TableCell>
                                 <TableCell style={{textAlign: "center"}}>
-                                  {row.tipo==="PARTICIPANTE"?
+                                  {row.tipo==="PARTICIPANTE"&&
                                     <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center", flexDirection: "column", textAlign: "center" }}>
                                       <span className="fa-layers fa-fw fa-3x" title="Participante" style={{alignSelf: "center"}}>
                                         <FontAwesomeIcon style={{color: "#0288d1"}} icon={faUser} transform="shrink-4 left-2"/>
@@ -514,13 +587,24 @@ export default function TicketList() {
                                       </span>
                                       <small>PARTICIPANTE</small>
                                     </Box>
-                                    :
+                                  }
+                                  {row.tipo==="INVITADO"&&
                                     <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center", flexDirection: "column", textAlign: "center" }}>
                                       <span className="fa-layers fa-fw fa-3x" title="Invitado" style={{alignSelf: "center"}}>
                                         <FontAwesomeIcon style={{color: "#ff5722"}} icon={faUser} transform="shrink-4 left-2"/>
                                         <FontAwesomeIcon icon={faJoint} transform="shrink-10 down-2 right-4"/>
                                       </span>
                                       <small>INVITADO</small>
+                                    </Box>
+                                  }
+                                  {row.tipo==="SPONSOR"&&
+                                    <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center", flexDirection: "column", textAlign: "center" }}>
+                                      <span className="fa-layers fa-fw fa-3x" title="Sponsor"  style={{alignSelf: "center"}}>
+                                        <FontAwesomeIcon style={{color: "#11ac39"}} icon={faUser} transform="shrink-4 left-2"/>
+                                        <FontAwesomeIcon icon={faCannabis} transform="shrink-10 up-1 right-4"/>
+                                        <FontAwesomeIcon icon={faStoreAlt} transform="shrink-10 down-5 right-4"/>
+                                      </span>
+                                      <small>SPONSOR</small>
                                     </Box>
                                   }
                                 </TableCell>

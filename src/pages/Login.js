@@ -23,7 +23,7 @@ export default function Login() {
                             <Stack spacing={2}>
                                 <TextField
                                     {...register("username", { required: true })}
-                                    error={errors.username}
+                                    error={errors?.username}
                                     id="outlined-basic"
                                     autoComplete="username"
                                     label="Usuario"
@@ -32,7 +32,7 @@ export default function Login() {
                                 />
                                 <TextField
                                     {...register("password", { required: true })}
-                                    error={errors.password}
+                                    error={errors?.password}
                                     id="outlined-password-input"
                                     autoComplete="current-password"
                                     label="Password"
