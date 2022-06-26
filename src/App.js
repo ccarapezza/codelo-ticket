@@ -12,7 +12,7 @@ import { useLocation } from 'react-router-dom';
 import { faServer } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Brightness4, Brightness7, Refresh } from '@mui/icons-material';
-import codeloTicketLogo from './assets/codelo-ticket-logo.jpg';
+import codeloTicketLogo from './assets/codelo-ticket-logo.png';
 import { blueGrey, deepOrange } from '@mui/material/colors';
 
 axios.defaults.baseURL = process.env.NODE_ENV === "production"?"https://codelo-ticket-api.herokuapp.com/":"http://localhost:8080/";

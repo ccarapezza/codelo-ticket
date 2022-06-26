@@ -24,7 +24,7 @@
     "react-dom": "^18.1.0",
     "react-google-charts": "^4.0.0",
     "react-hook-form": "^7.32.2",
-    "react-qr-reader": "^3.0.0-beta-1",
+    "react-qr-reader": "^2.2.1",
     "react-router-dom": "^6.3.0",
     "serve": "^13.0.2",
     "web-vitals": "^2.1.4"
