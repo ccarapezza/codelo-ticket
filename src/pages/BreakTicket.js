@@ -23,15 +23,14 @@ export default function BreakTicket() {
         setCamera(camera === "environment" ? "user" : "environment");
     };
 
-    const handleScan = (data) => {
+    const handleScan = (data, err) => {
         if (data) {
             setHashTicket(data);
         }
-    };
-
-    const handleError = (err) => {
-        setError(err);
-        console.error(err);
+        if(error){
+            setError(err);
+            console.error(err);
+        }
     };
 
     const clearForms = () => {
@@ -164,11 +163,10 @@ export default function BreakTicket() {
                                     */}
                                     
                                     <QrReader
-                                        facingMode={camera}
-                                        delay={300}
-                                        onError={handleError}
-                                        onScan={handleScan}
-                                        style={{ width: "100%" }}
+                                        constraints={{facingMode:{camera}}}
+                                        scanDelay={300}
+                                        onResult={handleScan}
+                                        containerStyle={{ width: "100%" }}
                                     />
                                 </CardContent>
                             </Card>
