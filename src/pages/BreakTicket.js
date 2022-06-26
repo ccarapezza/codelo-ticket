@@ -24,10 +24,10 @@ export default function BreakTicket() {
     };
 
     const handleScan = (data, err) => {
-        if (data) {
-            setHashTicket(data);
+        if (!!data) {
+            setHashTicket(data?.text);
         }
-        if(error){
+        if(!!error){
             setError(err);
             console.error(err);
         }
@@ -161,6 +161,7 @@ export default function BreakTicket() {
                                         <div>QR RESULT:{hashTicket}</div>
                                         <div>{JSON.stringify(error)}</div>
                                     */}
+                                    
                                     {camera==="environment"?
                                         <QrReader
                                             key='environmentQR'
@@ -179,6 +180,7 @@ export default function BreakTicket() {
                                         />
 
                                     }
+                                    
                                 </CardContent>
                             </Card>
                     }
