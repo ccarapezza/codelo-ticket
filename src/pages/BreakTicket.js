@@ -163,7 +163,7 @@ export default function BreakTicket() {
                                     */}
                                     
                                     <QrReader
-                                        constraints={{facingMode:{camera}}}
+                                        constraints={{facingMode:camera}}
                                         scanDelay={300}
                                         onResult={handleScan}
                                         containerStyle={{ width: "100%" }}
