@@ -161,13 +161,24 @@ export default function BreakTicket() {
                                         <div>QR RESULT:{hashTicket}</div>
                                         <div>{JSON.stringify(error)}</div>
                                     */}
-                                    
-                                    <QrReader
-                                        constraints={{facingMode:camera}}
-                                        scanDelay={300}
-                                        onResult={handleScan}
-                                        containerStyle={{ width: "100%" }}
-                                    />
+                                    {camera==="environment"?
+                                        <QrReader
+                                            key='environmentQR'
+                                            constraints={{facingMode:'environment'}}
+                                            scanDelay={300}
+                                            onResult={handleScan}
+                                            containerStyle={{ width: "100%" }}
+                                        />
+                                    :
+                                        <QrReader
+                                            key='userQR'
+                                            constraints={{facingMode:'user'}}
+                                            scanDelay={300}
+                                            onResult={handleScan}
+                                            containerStyle={{ width: "100%" }}
+                                        />
+
+                                    }
                                 </CardContent>
                             </Card>
                     }
