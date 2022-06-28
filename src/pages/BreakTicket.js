@@ -7,6 +7,7 @@ import { QrReader } from 'react-qr-reader';
 import Context from '../context/Context';
 import axios from 'axios';
 import { ArrowBack, ContentCut, MonetizationOn } from '@mui/icons-material';
+import Loading from '../components/Loading';
 
 export default function BreakTicket() {
     const [camera, setCamera] = useState("environment");
@@ -14,6 +15,9 @@ export default function BreakTicket() {
     const [hashTicket, setHashTicket] = useState();
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [loadingMesa, setLoadingMesa] = useState(false);
+
+    const [mesa, setMesa] = useState();
 
     const [ticketData, setTicketData] = useState();
 
@@ -21,6 +25,27 @@ export default function BreakTicket() {
 
     const switchCamera = () => {
         setCamera(camera === "environment" ? "user" : "environment");
+    };
+
+    const loadMesa = () => {
+        setMesa();
+        if(ticketData.dni){
+            setLoadingMesa(true);
+            axios.get("/api/participante-by-dni",{
+                params:{
+                    dni: ticketData.dni
+                },
+            }).then(function (response) {
+                const participante = response.data;
+                setMesa(participante.mesa?.name);
+            }).catch(function (error) {
+                // handle error
+                context.showMessage("No se pudo obtener la mesa del participante.", "error");
+                console.log(error);
+            }).finally(function(){
+                setLoadingMesa(false);
+            });
+        }
     };
 
     const handleScan = (data, err) => {
@@ -47,6 +72,7 @@ export default function BreakTicket() {
                 if(response.status === 200){
                     context.showMessage("Ticket verificado correctamente!", "success");
                     setTicketData(response.data)
+                    loadMesa();
                 }else{
                     clearForms();
                     context.showMessage("No se ha podido verificar el Ticket. Contacte con el administrador.", "error");
@@ -122,7 +148,11 @@ export default function BreakTicket() {
                                     </Box>
                                 }
                                 <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center", flexDirection: "column", textAlign: "center", mb: 2}}>
-                                    <Chip variant="outlined" label={<b>{"MESA "+parseInt(Math.random() * (15 - 1) + 1)}</b>}/>
+                                    {loadingMesa?
+                                        <Loading loadingMessage='Obteniendo Mesa...'/>
+                                    :
+                                        <Chip variant="outlined" label={<b>{"MESA "+mesa}</b>}/>
+                                    }
                                 </Box>
                                 <small><strong>DNI: </strong>{ticketData.dni}</small>
                                 <small><strong>E-mail: </strong>{ticketData.email}</small>
