@@ -12,6 +12,7 @@ export default function TicketCutControl() {
 
   const [ticketList, setTicketList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingChart, setLoadingChart] = useState(false);
 
   const [ingresados, setIngresados] = useState(0);
   const [noIngresados, setNoIngresados] = useState(0);
@@ -43,6 +44,7 @@ export default function TicketCutControl() {
   }, [])
 
   useEffect(() => {
+    setLoadingChart(true);
     const ingresadosCount = ticketList.filter(ticket=>ticket.ingresado).length
     const noIngresadosCount = ticketList.length-ingresadosCount;
     const pagosCount = ticketList.filter(ticket=>ticket.pago).length
@@ -51,6 +53,7 @@ export default function TicketCutControl() {
     setNoIngresados(noIngresadosCount);
     setPagos(pagosCount);
     setNoPagos(noPagosCount);
+    setLoadingChart(false);
   }, [ticketList])
   
   const [tab, setTab] = useState(0);
@@ -85,13 +88,17 @@ export default function TicketCutControl() {
                   <Chip size="small" variant='outlined' sx={{ m: 1, color: lightGreen[400] }} label={<b>Ingresados: {ingresados}</b>}/>
                   <Chip size="small" variant='outlined' sx={{ m: 1, color: deepOrange[500]  }} label={<b>No ingresados: {noIngresados}</b>}/>
                 </Stack>
-                <Chart
-                  chartType="PieChart"
-                  options={{is3D: true, colors: [lightGreen[500], deepOrange[400]], legend: {position: 'none'}, backgroundColor: 'transparent',}}
-                  data={[["Ingresados", "Cantidad"], ["Ingresados", ingresados], ["No Ingresados", noIngresados]]}
-                  width="100%"
-                  height="400px"
-                />
+                {loadingChart?
+                  <Loading loadingMessage='Cargando gráfico...'/>
+                :
+                  <Chart
+                    chartType="PieChart"
+                    options={{is3D: true, colors: [lightGreen[500], deepOrange[400]], legend: {position: 'none'}, backgroundColor: 'transparent',}}
+                    data={[["Ingresados", "Cantidad"], ["Ingresados", ingresados], ["No Ingresados", noIngresados]]}
+                    width="100%"
+                    height="400px"
+                  />
+                }
             </Box>
             <Box value={tab}
                 index={1}
@@ -104,13 +111,17 @@ export default function TicketCutControl() {
                   <Chip size="small" variant='outlined' sx={{ m: 1, color: teal[500] }} label={<b>Pagos: {pagos}</b>}/>
                   <Chip size="small" variant='outlined' sx={{ m: 1, color: pink[500] }} label={<b>No pagos: {noPagos}</b>}/>
                 </Stack>
-                <Chart
-                  chartType="PieChart"
-                  options={{is3D: true, colors: [teal[500], pink[500]], legend: {position: 'none'}, backgroundColor: 'transparent',}}
-                  data={[["Condición", "Cantidad"], ["Pagos", pagos], ["No Pagos", noPagos]]}
-                  width="100%"
-                  height="400px"
-                />
+                {loadingChart?
+                  <Loading loadingMessage='Cargando gráfico...'/>
+                :
+                  <Chart
+                    chartType="PieChart"
+                    options={{is3D: true, colors: [teal[500], pink[500]], legend: {position: 'none'}, backgroundColor: 'transparent',}}
+                    data={[["Condición", "Cantidad"], ["Pagos", pagos], ["No Pagos", noPagos]]}
+                    width="100%"
+                    height="400px"
+                  />
+                }
             </Box>
           </Box>
 
