@@ -12,6 +12,7 @@ export default function BreakTicket() {
     const [camera, setCamera] = useState("environment");
 
     const [hashTicket, setHashTicket] = useState();
+    const [mesa, setMesa] = useState("");
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -38,6 +39,29 @@ export default function BreakTicket() {
         setTicketData();
         setHashTicket();
     };
+
+    const getMesaByDni = (dni) => {
+        setMesa("");
+        setLoading(true);
+        axios.get("/api/ticket/participante-by-dni",{
+            params:{
+            dni: dni
+            },
+        })
+        .then(function (response) {
+            // handle success
+            if(response.status === 200){
+            setMesa(response.data?.mesa?.name);
+            }
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+        .then(function () {
+            setLoading(false);
+        })
+    };
     
     useEffect(() => {
         if(hashTicket){
@@ -47,7 +71,8 @@ export default function BreakTicket() {
             }).then(function (response) {
                 if(response.status === 200){
                     context.showMessage("Ticket verificado correctamente!", "success");
-                    setTicketData(response.data)
+                    setTicketData(response.data);
+                    getMesaByDni(response.data?.dni);
                 }else{
                     clearForms();
                     context.showMessage("No se ha podido verificar el Ticket. Contacte con el administrador.", "error");

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { ContentCut, DeleteForeverOutlined, DoorBackOutlined, Edit, FilterAlt, MonetizationOn, MoreVert, QrCode, Search } from '@mui/icons-material';
+import { ContentCut, DeleteForeverOutlined, DoorBackOutlined, Edit, Email, FilterAlt, MonetizationOn, MoreVert, QrCode, Search } from '@mui/icons-material';
 import { Box, Card, CardContent, CardHeader, Chip, Collapse, FormControl, IconButton, InputAdornment, InputLabel, List, ListItem, ListItemAvatar, ListItemIcon, ListItemSecondaryAction, ListItemText, Menu, MenuItem, OutlinedInput, Paper, Select, Stack, Switch, Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Typography } from '@mui/material'
 import { Container } from '@mui/system'
 import axios from 'axios';
@@ -187,6 +187,46 @@ export default function TicketList() {
     })
   };
 
+  const resendEmail = (ticketId) => {
+    setLoading(true);
+    axios.get("/api/ticket/resend-email",{
+      params:{
+        id: ticketId
+      },
+    })
+    .then(function (response) {
+      // handle success
+      if(response.status === 200){
+        setTicketList(response.data);
+      }
+    })
+    .catch(function (error) {
+      // handle error
+      console.log(error);
+    })
+    .then(function () {
+      setLoading(false);
+    })
+  };
+
+  const resendAllEmail = () => {
+    setLoading(true);
+    axios.get("/api/ticket/resend-all-email")
+    .then(function (response) {
+      // handle success
+      if(response.status === 200){
+        setTicketList(response.data);
+      }
+    })
+    .catch(function (error) {
+      // handle error
+      console.log(error);
+    })
+    .then(function () {
+      setLoading(false);
+    })
+  };
+
   const confirmarPagoTicket = () => {
     axios.put("/api/ticket/update-pago",{
       id: selectedTicket?.id
@@ -275,6 +315,7 @@ export default function TicketList() {
 
   const [confirmCutTicketOpen, setConfirmCutTicketOpen] = useState(null);
   const [confirmPagoTicketOpen, setConfirmPagoTicketOpen] = useState(null);
+  const [resendEmailTicketOpen, setResendEmailTicketOpen] = useState(null);
 
   const [selectedTicket, setSelectedTicket] = useState(null);
   const handleClickAnchor = (event, selectedRow) => {
@@ -396,7 +437,10 @@ export default function TicketList() {
                 <MenuItem onClick={()=>{handleClose(); setConfirmCutTicketOpen(true);}}><ListItemIcon><ContentCut/></ListItemIcon>Cortar Ticket</MenuItem>
               }
               {selectedTicket?.pago&&
+              <>
+                <MenuItem onClick={()=>{handleClose(); setResendEmailTicketOpen(true);}}><ListItemIcon><Email/></ListItemIcon>Reenviar Email</MenuItem>
                 <MenuItem onClick={()=>{handleClose(); navigate("/ticket-viewer/"+selectedTicket?.hash);}}><ListItemIcon><QrCode/></ListItemIcon>Ver QR</MenuItem>
+              </>
               }
               <MenuItem onClick={()=>{handleClose(); navigate("/edit-ticket/"+selectedTicket?.id);}}><ListItemIcon><Edit/></ListItemIcon>Editar</MenuItem>
               <MenuItem onClick={handleClose}><ListItemIcon><DeleteForeverOutlined/></ListItemIcon>Eliminar</MenuItem>
@@ -413,6 +457,13 @@ export default function TicketList() {
               setOpen={setConfirmPagoTicketOpen}
               actionConfirm={confirmarPagoTicket}
               message={"Se procederá a confirmar el pago del Ticket N° "+selectedTicket?.id+"."}
+              confirmButtonLabel="Confirmar"
+              cancelButtonLabel="Cancel" />
+
+            <ConfirmDialog open={resendEmailTicketOpen}
+              setOpen={setResendEmailTicketOpen}
+              actionConfirm={()=>{resendEmail(selectedTicket?.id)}}
+              message={"Se procederá a enviar el email del Ticket N° "+selectedTicket?.id+"."}
               confirmButtonLabel="Confirmar"
               cancelButtonLabel="Cancel" />
 
