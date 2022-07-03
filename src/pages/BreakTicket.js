@@ -13,11 +13,10 @@ export default function BreakTicket() {
     const [camera, setCamera] = useState("environment");
 
     const [hashTicket, setHashTicket] = useState();
+    const [mesa, setMesa] = useState("");
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [loadingMesa, setLoadingMesa] = useState(false);
-
-    const [mesa, setMesa] = useState();
 
     const [ticketData, setTicketData] = useState();
 
@@ -25,27 +24,6 @@ export default function BreakTicket() {
 
     const switchCamera = () => {
         setCamera(camera === "environment" ? "user" : "environment");
-    };
-
-    const loadMesa = () => {
-        setMesa();
-        if(ticketData.dni){
-            setLoadingMesa(true);
-            axios.get("/api/participante-by-dni",{
-                params:{
-                    dni: ticketData.dni
-                },
-            }).then(function (response) {
-                const participante = response.data;
-                setMesa(participante.mesa?.name);
-            }).catch(function (error) {
-                // handle error
-                context.showMessage("No se pudo obtener la mesa del participante.", "error");
-                console.log(error);
-            }).finally(function(){
-                setLoadingMesa(false);
-            });
-        }
     };
 
     const handleScan = (data, err) => {
@@ -62,6 +40,29 @@ export default function BreakTicket() {
         setTicketData();
         setHashTicket();
     };
+
+    const loadMesaByDni = (dni) => {
+        setMesa("");
+        setLoadingMesa(true);
+        axios.get("/api/ticket/participante-by-dni",{
+            params:{
+                dni: dni
+            },
+        })
+        .then(function (response) {
+            // handle success
+            if(response.status === 200){
+                setMesa(response.data?.mesa?.name);
+            }
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+        .then(function () {
+            setLoadingMesa(false);
+        })
+    };
     
     useEffect(() => {
         if(hashTicket){
@@ -71,8 +72,8 @@ export default function BreakTicket() {
             }).then(function (response) {
                 if(response.status === 200){
                     context.showMessage("Ticket verificado correctamente!", "success");
-                    setTicketData(response.data)
-                    loadMesa();
+                    setTicketData(response.data);
+                    loadMesaByDni(response.data?.dni);
                 }else{
                     clearForms();
                     context.showMessage("No se ha podido verificar el Ticket. Contacte con el administrador.", "error");
