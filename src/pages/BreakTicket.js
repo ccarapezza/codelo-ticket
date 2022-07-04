@@ -42,7 +42,7 @@ export default function BreakTicket() {
     };
 
     const loadMesaByDni = (dni) => {
-        setMesa("");
+        setMesa("-");
         setLoadingMesa(true);
         axios.get("https://codelo-cup-api.herokuapp.com/api/participante-by-dni",{
             params:{
@@ -185,12 +185,12 @@ export default function BreakTicket() {
                                         </IconButton>
                                     } />
                                 <CardContent>
-                                    <div>
-                                        <input type="text" value={hashTicket} onChange={(e)=>{setHashTicket(e.target.value)}} />
-                                    </div>
-                                    <div>QR RESULT:{hashTicket}</div>
-                                    <div>{JSON.stringify(error)}</div>
                                      {/*
+                                        <div>
+                                            <input type="text" value={hashTicket} onChange={(e)=>{setHashTicket(e.target.value)}} />
+                                        </div>
+                                        <div>QR RESULT:{hashTicket}</div>
+                                        <div>{JSON.stringify(error)}</div>
                                     */}
                                     
                                     {camera==="environment"?
