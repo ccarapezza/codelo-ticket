@@ -10,6 +10,7 @@ import TicketList from "./pages/TickerList";
 import BreakTicket from "./pages/BreakTicket";
 import TicketCutControl from "./pages/TicketCutControl";
 import TicketViewer from "./pages/TicketViewer";
+import EditEmailInfo from "./pages/EditEmailInfo";
 
 export default function RoutesSection() {
   const context = useContext(Context);
@@ -21,6 +22,7 @@ export default function RoutesSection() {
       <Route path="/ticket-viewer/:hash" element={<TicketViewer />} />
       {context.isLogged&&
         <>
+          <Route path="/edit-email-info" element={<EditEmailInfo />} />
           <Route path="/cut-ticket-control" element={<TicketCutControl />} />
           <Route path="/create-ticket" element={<CreateTicket />} />
           <Route path="/reserve-ticket" element={<CreateTicket reserve={true} />} />
