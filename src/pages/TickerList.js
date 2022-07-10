@@ -236,24 +236,6 @@ export default function TicketList() {
     })
   };
 
-  const resendAllEmail = () => {
-    setLoading(true);
-    axios.get("/api/ticket/resend-all-email")
-    .then(function (response) {
-      // handle success
-      if(response.status === 200){
-        setTicketList(response.data);
-      }
-    })
-    .catch(function (error) {
-      // handle error
-      console.log(error);
-    })
-    .then(function () {
-      setLoading(false);
-    })
-  };
-
   const confirmarPagoTicket = () => {
     axios.put("/api/ticket/update-pago",{
       id: selectedTicket?.id

@@ -1,4 +1,4 @@
-import { faChartPie, faCut, faHome, faList, faSignIn, faSignOut, faTicket, faTicketSimple } from '@fortawesome/free-solid-svg-icons';
+import { faChartPie, faCut, faEnvelope, faHome, faList, faSignIn, faSignOut, faTicket, faTicketSimple } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Box, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import React, { useContext } from 'react'
@@ -89,6 +89,15 @@ export default function Menu(props) {
                                     </span>
                                 </ListItemIcon>
                                 <ListItemText primary={"Control"} />
+                            </ListItem>
+
+                            <ListItem button key={"edit-email"} onClick={(e) => navigate("/edit-email-info")}>
+                                <ListItemIcon>
+                                    <span className="fa-layers fa-fw fa-3x">
+                                        <FontAwesomeIcon icon={faEnvelope} transform="shrink-6 left-2" />
+                                    </span>
+                                </ListItemIcon>
+                                <ListItemText primary={"Editar Email"} />
                             </ListItem>
 
                             <ListItem button key={"close-session"} onClick={(e) => context.logout()}>
