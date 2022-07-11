@@ -222,11 +222,14 @@ export default function TicketList() {
     .then(function (response) {
       // handle success
       if(response.status === 200){
-        setTicketList(response.data);
+        context.showMessage("Se ha enviado el Ticket.", "success");
+      }else{
+        context.showMessage("No se ha enviado el Ticket.", "error");
       }
     })
     .catch(function (error) {
       // handle error
+      context.showMessage("No se ha enviado el Ticket.", "error");
       console.log(error);
     })
     .then(function () {

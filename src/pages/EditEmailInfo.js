@@ -57,10 +57,13 @@ export default function EditEmailInfo(props) {
     .then(function (response) {
       // handle success
       if(response.status === 200){
-        
+        context.showMessage("Tickets enviados cargada correctamente!", "success");
+      }else{
+        context.showMessage("Error al enviar los tickets!", "error");
       }
     })
     .catch(function (error) {
+      context.showMessage("Error al enviar los tickets!", "error");
       // handle error
       console.log(error);
     })
