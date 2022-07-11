@@ -216,10 +216,8 @@ export default function TicketList() {
   
   const resendEmail = (ticketId) => {
     setLoading(true);
-    axios.get("/api/ticket/resend-email",{
-      params:{
+    axios.post("/api/ticket/resend-email",{
         id: ticketId
-      },
     })
     .then(function (response) {
       // handle success
