@@ -67,10 +67,6 @@ export default function EditEmailInfo(props) {
       // handle error
       console.log(error);
     })
-    .then(function (error) {
-      context.showMessage("No se ha cargado la información. Contacte con el administrador.", "error");
-      console.error(error);
-    })
   };
   
   const loadParams = ()=>{
