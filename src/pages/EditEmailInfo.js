@@ -53,7 +53,7 @@ export default function EditEmailInfo(props) {
   }
   
   const resendAllEmail = () => {
-    axios.post("/api/ticket/resend-all-email")
+    axios.post("/api/ticket/resend-all-emails")
     .then(function (response) {
       // handle success
       if(response.status === 200){
