@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Alert, Box, Button, Card, CardContent, CardHeader, Chip, IconButton, Stack, Typography } from '@mui/material'
 import { Container } from '@mui/system';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCamera, faCannabis, faJoint, faSquareFull, faSyncAlt, faTicket, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCamera, faCannabis, faJoint, faSquareFull, faStoreAlt, faSyncAlt, faTicket, faUser } from '@fortawesome/free-solid-svg-icons';
 import { QrReader } from 'react-qr-reader';
 import Context from '../context/Context';
 import axios from 'axios';
@@ -13,10 +13,11 @@ export default function BreakTicket() {
     const [camera, setCamera] = useState("environment");
 
     const [hashTicket, setHashTicket] = useState();
+    const [nParticipante, setNParticipante] = useState("");
     const [mesa, setMesa] = useState("");
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [loadingMesa, setLoadingMesa] = useState(false);
+    const [loadingParticipanteData, setLoadingParticipanteData] = useState(false);
 
     const [ticketData, setTicketData] = useState();
 
@@ -43,7 +44,7 @@ export default function BreakTicket() {
 
     const loadMesaByDni = (dni) => {
         setMesa("-");
-        setLoadingMesa(true);
+        setLoadingParticipanteData(true);
         axios.get("https://codelo-cup-api.herokuapp.com/api/participante-by-dni",{
             params:{
                 dni: dni
@@ -52,6 +53,7 @@ export default function BreakTicket() {
         .then(function (response) {
             // handle success
             if(response.status === 200){
+                setNParticipante(response.data?.m);
                 setMesa(response.data?.mesa?.name);
             }
         })
@@ -60,7 +62,7 @@ export default function BreakTicket() {
             console.log(error);
         })
         .then(function () {
-            setLoadingMesa(false);
+            setLoadingParticipanteData(false);
         })
     };
     
@@ -131,7 +133,7 @@ export default function BreakTicket() {
                                 <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center", flexDirection: "column", textAlign: "center", mb: 2}}>
                                     <Chip size="small" variant="outlined" sx={{borderColor: "black", p:3}} label={<Stack><b style={{textTransform: "uppercase"}}>{ticketData.nombre+" "+ticketData.apellido}</b><span><FontAwesomeIcon icon={faTicket}/> E-TICKET <b>#{ticketData.id}</b></span></Stack>}/>
                                 </Box>
-                                {ticketData.tipo==="PARTICIPANTE"?
+                                {ticketData.tipo==="PARTICIPANTE"&&
                                     <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center", flexDirection: "column", textAlign: "center", my:2 }}>
                                         <span className="fa-layers fa-fw fa-3x" title="Participante" style={{alignSelf: "center"}}>
                                             <FontAwesomeIcon style={{color: "#0288d1"}} icon={faUser} transform="shrink-4 left-2"/>
@@ -139,25 +141,40 @@ export default function BreakTicket() {
                                         </span>
                                         <Typography variant="h6">PARTICIPANTE</Typography>
                                     </Box>
-                                    :
+                                }
+                                {ticketData.tipo==="INVITADO"&&
                                     <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center", flexDirection: "column", textAlign: "center", my:2}}>
                                         <span className="fa-layers fa-fw fa-3x" title="Invitado" style={{alignSelf: "center"}}>
                                             <FontAwesomeIcon style={{color: "#ff5722"}} icon={faUser} transform="shrink-4 left-2"/>
                                             <FontAwesomeIcon icon={faJoint} transform="shrink-10 down-2 right-4"/>
                                         </span>
-                                        <Typography variant="h6">PARTICIPANTE</Typography>
+                                        <Typography variant="h6">INVITADO</Typography>
+                                    </Box>
+                                }
+                                {ticketData.tipo==="SPONSOR"&&
+                                    <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center", flexDirection: "column", textAlign: "center", my:2}}>
+                                        <span className="fa-layers fa-fw fa-3x" title="Sponsor" style={{alignSelf: "center"}}>
+                                            <FontAwesomeIcon style={{color: "#11ac39"}} icon={faUser} transform="shrink-4 left-2"/>
+                                            <FontAwesomeIcon icon={faCannabis} transform="shrink-10 up-1 right-4"/>
+                                            <FontAwesomeIcon icon={faStoreAlt} transform="shrink-10 down-5 right-4"/>
+                                        </span>
+                                        <Typography variant="h6">SPONSOR</Typography>
                                     </Box>
                                 }
                                 <Box sx={{ display: "flex", alignContent: "center", justifyContent: "center", flexDirection: "column", textAlign: "center", mb: 2}}>
-                                    {loadingMesa?
-                                        <Loading loadingMessage='Obteniendo Mesa...'/>
+                                    {loadingParticipanteData?
+                                        <Loading loadingMessage='Obteniendo Información...'/>
                                     :
-                                        <Chip variant="outlined" label={<b>{"MESA "+mesa}</b>}/>
+                                        <>
+                                            {nParticipante&&<Chip variant="filled" label={<b>{nParticipante?("#"+nParticipante):""}</b>}/>}
+                                            {mesa&&<Chip variant="outlined" label={<b>{mesa}</b>}/>}
+                                        </>
                                     }
                                 </Box>
                                 <small><strong>DNI: </strong>{ticketData.dni}</small>
                                 <small><strong>E-mail: </strong>{ticketData.email}</small>
                                 <small><strong>Fecha de compra: </strong>{new Date(ticketData.createdAt).toLocaleString()}</small>
+                                <small><strong>Observaciones: </strong>{ticketData.observaciones}</small>
                                 {ticketData.ingresado&&
                                     <Alert sx={{my: 2}} severity="error">EL TICKET YA SE ENCUENTRA CORTADO</Alert>
                                 }
