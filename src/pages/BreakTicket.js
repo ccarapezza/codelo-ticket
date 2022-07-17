@@ -15,6 +15,7 @@ export default function BreakTicket() {
     const [hashTicket, setHashTicket] = useState();
     const [nParticipante, setNParticipante] = useState("");
     const [mesa, setMesa] = useState("");
+    const [mesaSecundaria, setMesaSecundaria] = useState("");
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [loadingParticipanteData, setLoadingParticipanteData] = useState(false);
@@ -53,8 +54,9 @@ export default function BreakTicket() {
         .then(function (response) {
             // handle success
             if(response.status === 200){
-                setNParticipante(response.data?.m);
+                setNParticipante(response.data?.n);
                 setMesa(response.data?.mesa?.name);
+                setMesaSecundaria(response.data?.mesaSecundaria?.name);
             }
         })
         .catch(function (error) {
@@ -168,6 +170,7 @@ export default function BreakTicket() {
                                         <>
                                             {nParticipante&&<Chip variant="filled" label={<b>{nParticipante?("#"+nParticipante):""}</b>}/>}
                                             {mesa&&<Chip variant="outlined" label={<b>{mesa}</b>}/>}
+                                            {mesaSecundaria&&<Chip variant="outlined" label={<b>{mesaSecundaria}</b>}/>}
                                         </>
                                     }
                                 </Box>
